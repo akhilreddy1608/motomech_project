@@ -1,0 +1,466 @@
+<?xml version="1.0"?>
+<robot name="amr_crick">
+
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>/amr_crick</robotNamespace>
+        </plugin>
+    </gazebo>
+
+    <material name="green">
+        <color rgba="0 0.8 0 1"/>
+    </material>
+
+    <material name="red">
+        <color rgba="1 0 0 1"/>
+    </material>
+
+    <!-- base_link START -->
+    <link name="base_link">
+    </link>
+
+    <link name="body_link">
+
+        <inertial>
+            <origin xyz="0 0.017 0" rpy="0 0 0"/>
+            <mass value="2" />
+            <inertia ixx="67e-6" ixy="0.0" ixz="0.0" iyy="84e-6" iyz="0.0" izz="131e-6"/>
+        </inertial>
+       
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.040 0.040 0.020"/>
+            </geometry>
+        </collision>
+
+        <visual>
+            <origin  xyz="0 0 0" rpy="1.5708 0 0"/>
+            <geometry>
+                <mesh filename="package://amr_crick_description/models/meshes/amr_crick_mozzo_caster.dae"/>
+            </geometry>
+            <material name="green"/>
+        </visual>
+
+    </link>
+
+
+    <gazebo reference="body_link">
+        <kp>100000.0</kp>
+        <kd>100000.0</kd>
+        <mu1>10.0</mu1>
+        <mu2>10.0</mu2>
+        <material>Gazebo/Grey</material>
+    </gazebo>
+
+    <!-- base_link END -->
+
+    <joint name="base_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="body_link"/>
+        <origin xyz="0.0 0 0.0" rpy="0 0 0"/>
+    </joint>
+
+    <!-- rods_sx_down_link START -->
+
+    <link name="rods_sx_down_link">
+
+        <inertial>
+            <origin xyz="0 -0.039 0" rpy="0 0 0"/>
+            <mass value="0.089" />
+            <inertia ixx="75e-6" ixy="0.0" ixz="0.0" iyy="142e-6" iyz="0.0" izz="216e-6"/>
+        </inertial>
+     
+        <collision>
+            <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+            <geometry>
+                <mesh filename="package://amr_crick_description/models/meshes/amr_crick_rods_sx_down.dae"/>
+            </geometry>
+        </collision> 
+
+        <visual>
+            <origin  xyz="0 0 0" rpy="1.5708 0 0"/>
+            <geometry>
+                <mesh filename="package://amr_crick_description/models/meshes/amr_crick_rods_sx_down.dae"/>
+            </geometry>
+             <material name="red"/>
+        </visual>
+    </link>
+
+    <gazebo reference="rods_sx_down_link">
+        <kp>100000.0</kp>
+        <kd>100000.0</kd>
+        <mu1>10.0</mu1>
+        <mu2>10.0</mu2>
+        <material>Gazebo/Grey</material>
+    </gazebo>
+
+    <!-- rods_sx_down_link END -->
+
+    <!-- 1/ roll_down_rods_sx_down_joint START -->        
+    <joint name="roll_1_joint" type="revolute">
+        <parent link="body_link"/>
+        <child link="rods_sx_down_link"/>
+        <origin xyz="0.0 -0.017 -0.004" rpy="-0.24 0 0"/>
+        <limit lower="-3.14159" upper="3.14159" effort="1000" velocity="0.005"/>
+        <axis xyz="1 0 0"/>
+    </joint>
+
+    <transmission name="tran1">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="roll_1_joint">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="motor1">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>4</mechanicalReduction>
+        </actuator>
+    </transmission>
+    <!-- roll_down_rods_sx_down_joint END -->   
+
+    <!-- amr_crick_mozzo_motore_link START --> 
+    <link name="amr_crick_mozzo_motore_link">
+
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="0.15" />
+            <inertia ixx="400e-6" ixy="0.0" ixz="0.0" iyy="200e-6" iyz="0.0" izz="400e-6"/>
+        </inertial>
+       
+     
+        <collision>
+            <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+            <geometry>
+                <mesh filename="package://amr_crick_description/models/meshes/amr_crick_mozzo_motore.dae"/>
+            </geometry> 
+        </collision>
+
+        <visual>
+            <origin  xyz="0 0 0" rpy="1.5708 0 0"/>
+            <geometry>
+                <mesh filename="package://amr_crick_description/models/meshes/amr_crick_mozzo_motore.dae"/>
+            </geometry>
+             <material name="red"/>
+        </visual>
+    </link>
+
+    <gazebo reference="amr_crick_mozzo_motore_link">
+        <kp>100000.0</kp>
+        <kd>100000.0</kd>
+        <mu1>10.0</mu1>
+        <mu2>10.0</mu2>
+        <material>Gazebo/Grey</material>
+    </gazebo>
+
+    <!-- amr_crick_mozzo_motore_link END -->
+
+    <!-- 2/ roll_up_rods_sx_down_joint START -->        
+    <joint name="roll_2_joint" type="revolute">
+        <parent link="rods_sx_down_link"/>
+        <child link="amr_crick_mozzo_motore_link"/>
+        <origin xyz="0.0 -0.078 0" rpy="0.24 0 0"/>
+        <limit lower="-3.14159" upper="3.14159" effort="1000" velocity="0.005"/>
+        <axis xyz="1 0 0"/>
+    </joint>
+
+    <transmission name="tran2">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="roll_2_joint">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="motor2">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>4</mechanicalReduction>
+        </actuator>
+    </transmission>
+    <!-- roll_down_rods_sx_down_joint END --> 
+
+     <!-- rods_sx_up_link START -->
+
+    <link name="rods_sx_up_link">
+
+        <inertial>
+            <origin xyz="0 -0.039 0" rpy="0 0 0"/>
+            <mass value=".089" />
+            <inertia ixx="75e-6" ixy="0.0" ixz="0.0" iyy="300e-6" iyz="0.0" izz="377e-6"/>
+        </inertial>
+       
+        <collision>
+            <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+            <geometry>
+                <mesh filename="package://amr_crick_description/models/meshes/amr_crick_rods_sx_up.dae"/>
+            </geometry>
+        </collision>
+
+        <visual>
+            <origin  xyz="0 0 0" rpy="1.5708 0 0"/>
+            <geometry>
+                <mesh filename="package://amr_crick_description/models/meshes/amr_crick_rods_sx_up.dae"/>
+            </geometry>
+             <material name="red"/>
+        </visual>
+    </link>
+
+    <gazebo reference="rods_sx_up_link">
+        <kp>100000.0</kp>
+        <kd>100000.0</kd>
+         <mu1>100.0</mu1>
+        <mu2>10.0</mu2>
+        <material>Gazebo/Grey</material>
+    </gazebo>
+
+    <!-- rods_sx_up_link END -->
+
+    <!-- 3/ roll_down_rods_sx_up_joint START -->        
+    <joint name="roll_3_joint" type="revolute">
+        <parent link="amr_crick_mozzo_motore_link"/>
+        <child link="rods_sx_up_link"/>
+        <origin xyz="0 0 0" rpy="3.38159 0 0"/>
+        <limit lower="-3.14159" upper="3.14159" effort="1000" velocity="0.005"/>
+        <axis xyz="1 0 0"/>
+    </joint>
+
+    <transmission name="tran3">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="roll_3_joint">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="motor3">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>4</mechanicalReduction>
+        </actuator>
+    </transmission>
+    <!-- roll_down_rods_sx_up_joint END --> 
+<!-- amr_crick_appoggio_link START -->
+
+    <link name="amr_crick_appoggio_link">
+
+        <inertial>
+            <origin xyz="0 -0.017 0" rpy="0 0 0"/>
+            <mass value="0.33" />
+            <inertia ixx="63e-6" ixy="0.0" ixz="0.0" iyy="179e-6" iyz="0.0" izz="233e-6"/>
+        </inertial>
+     
+        <collision>
+            <origin xyz="0 -0.017 0" rpy="0 0 0"/>
+            <geometry>
+                <box size ="0.065 0.045 0.013"/>
+            </geometry>
+        </collision> 
+
+        <visual>
+            <origin xyz="0 -0.017 0"  rpy="1.5708 0 0"/>
+            <geometry>
+                <mesh filename="package://amr_crick_description/models/meshes/amr_crick_appoggio.dae"/>
+            </geometry>
+             <material name="red"/>
+        </visual>
+    </link>
+
+    <gazebo reference="amr_crick_appoggio_link">
+        <kp>100000.0</kp>
+        <kd>100000.0</kd>
+        <mu1>10.0</mu1>
+        <mu2>10.0</mu2>
+        <material>Gazebo/Grey</material>
+    </gazebo>
+
+    <!-- mr_crick_appoggio_link END -->
+
+    <!-- 4/ roll_up_rods_sx_up_joint START -->        
+    <joint name="roll_4_joint" type="revolute">
+        <parent link="rods_sx_up_link"/>
+        <child link="amr_crick_appoggio_link"/>
+        <origin xyz="0 -0.078 0" rpy="-0.24 0 0"/>
+        <limit lower="-3.14159" upper="3.14159" effort="1000" velocity="0.005"/>
+        <axis xyz="1 0 0"/>
+    </joint>
+
+    <transmission name="tran4">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="roll_4_joint">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="motor4">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>4</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+    <!-- roll_up_rods_sx_up_joint END --> 
+
+    <!-- rods_dx_up_link START -->
+
+    <link name="rods_dx_up_link">
+
+        <inertial>
+            <origin xyz="0 -0.039 0" rpy="0 0 0"/>
+            <mass value=".089" />
+            <inertia ixx="75e-6" ixy="0.0" ixz="0.0" iyy="300e-6" iyz="0.0" izz="377e-6"/>
+        </inertial>
+      
+        <collision>
+            <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+            <geometry>
+                <mesh filename="package://amr_crick_description/models/meshes/amr_crick_rods_sx_up.dae"/>
+            </geometry>
+        </collision>  
+
+        <visual>
+            <origin  xyz="0 0 0" rpy="1.5708 0 0"/>
+            <geometry>
+                <mesh filename="package://amr_crick_description/models/meshes/amr_crick_rods_sx_up.dae"/>
+            </geometry>
+             <material name="red"/>
+        </visual>
+    </link>
+
+    <gazebo reference="rods_dx_up_link">
+        <kp>100000.0</kp>
+        <kd>100000.0</kd>
+        <mu1>10.0</mu1>
+        <mu2>10.0</mu2>
+        <material>Gazebo/Grey</material>
+    </gazebo>
+
+    <!-- rods_dx_up_link END -->
+
+    <!-- 5/ roll_up_rods_dx_up_joint START -->        
+    <joint name="roll_5_joint" type="revolute">
+        <parent link="amr_crick_appoggio_link"/>
+        <child link="rods_dx_up_link"/>
+        <origin xyz="0 -0.034 0" rpy="-0.24 0 0"/>
+        <limit lower="-3.14159" upper="3.14159" effort="1000" velocity="0.005"/>
+        <axis xyz="1 0 0"/>
+    </joint>
+
+    <transmission name="tran5">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="roll_5_joint">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="motor5">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>4</mechanicalReduction>
+        </actuator>
+    </transmission>
+    <!-- roll_up_rods_sx_up_joint END --> 
+
+    <!-- amr_crick_mozzo_vite_link START -->
+
+    <link name="amr_crick_mozzo_vite_link">
+
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value=".15" />
+            <inertia ixx="13e-6" ixy="0.0" ixz="0.0" iyy="57e-6" iyz="0.0" izz="53e-6"/>
+        </inertial>
+        
+        <collision>
+            <origin xyz="0 0 0" rpy="-1.5708 0 0"/>
+            <geometry>
+                <box size ="0.045 0.025 0.015"/>
+            </geometry>
+        </collision> 
+
+        <visual>
+            <origin  xyz="0 0 0" rpy="-1.5708 0 0"/>
+            <geometry>
+                <mesh filename="package://amr_crick_description/models/meshes/amr_crick_mozzo_vite.dae"/>
+            </geometry>
+             <material name="red"/>
+        </visual>
+    </link>
+
+    <gazebo reference="amr_crick_mozzo_vite_link">
+        <kp>100000.0</kp>
+        <kd>100000.0</kd>
+        <mu1>10.0</mu1>
+        <mu2>10.0</mu2>
+        <material>Gazebo/Grey</material>
+    </gazebo>
+
+    <!-- amr_crick_mozzo_vite_link END -->
+
+    <!-- 6/ roll_up_rods_dx_up_joint START -->        
+    <joint name="roll_6_joint" type="revolute">
+        <parent link="rods_dx_up_link"/>
+        <child link="amr_crick_mozzo_vite_link"/>
+        <origin xyz="0 -0.078 0" rpy="0.24 0 0"/>
+        <limit lower="-3.14159" upper="3.14159" effort="1000" velocity="0.005"/>
+        <axis xyz="1 0 0"/>
+    </joint>
+
+    <transmission name="tran6">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="roll_6_joint">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="motor6">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>4</mechanicalReduction>
+        </actuator>
+    </transmission>
+    <!-- roll_up_rods_dx_up_joint END --> 
+
+    <!-- rods_dx_down_link START -->
+
+    <link name="rods_dx_down_link">
+
+        <inertial>
+            <origin xyz="0 -0.039 0" rpy="0 0 0"/>
+            <mass value="0.089" />
+            <inertia ixx="75e-6" ixy="0.0" ixz="0.0" iyy="142e-6" iyz="0.0" izz="216e-6"/>
+        </inertial>
+      
+        <collision>
+            <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+            <geometry>
+                <mesh filename="package://amr_crick_description/models/meshes/amr_crick_rods_sx_down.dae"/>
+            </geometry>
+        </collision> 
+
+        <visual>
+            <origin  xyz="0 0 0" rpy="1.5708 0 0"/>
+            <geometry>
+                <mesh filename="package://amr_crick_description/models/meshes/amr_crick_rods_sx_down.dae"/>
+            </geometry>
+             <material name="red"/>
+        </visual>
+    </link>
+
+    <gazebo reference="rods_dx_down_link">
+        <kp>100000.0</kp>
+        <kd>100000.0</kd>
+        <mu1>10.0</mu1>
+        <mu2>10.0</mu2>
+        <material>Gazebo/Grey</material>
+    </gazebo>
+
+    <!-- rods_dx_down_link END -->
+
+    <!-- 7/ roll_up_rods_dx_down_joint START -->        
+    <joint name="roll_7_joint" type="revolute">
+        <parent link="amr_crick_mozzo_vite_link"/>
+        <child link="rods_dx_down_link"/>
+        <origin xyz="0 0 0" rpy="3.38159 0 0"/>
+        <limit lower="-3.14159" upper="3.14159" effort="1000" velocity="0.005"/>
+        <axis xyz="1 0 0"/>
+    </joint>
+
+    <transmission name="tran7">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="roll_7_joint">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="motor7">
+            <hardwareInterface>EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>4</mechanicalReduction>
+        </actuator>
+    </transmission>
+    <!-- roll_up_rods_dx_down_joint END --> 
+
+    
+
+</robot> 
+

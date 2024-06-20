@@ -1,0 +1,7 @@
+<launch>
+    <node pkg="amr_description"
+          type="amr_transformation_tf.py"
+          name="amr_transformation_tf_node"
+          output="screen">
+    </node>
+</launch>

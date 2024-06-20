@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <include file="$(find amr_crick_description)/launch/spawn_amr_crick.launch"/>
+    <include file="$(find amr_crick_description)/launch/amr_crick_joints_control.launch"/>
+    <node pkg ="amr_crick_description"
+        type="amr_height.py"
+        name="amr_crick_positioning_node"
+        output="screen">
+  </node>
+
+</launch>
+
