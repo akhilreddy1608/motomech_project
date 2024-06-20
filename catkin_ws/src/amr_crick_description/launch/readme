@@ -1,0 +1,22 @@
+to visualize in rviz
+
+roslaunch amr_crick_description amr_crick_urdf_visualize.launch
+open rviz_config
+
+
+to visualize in gazebo
+
+
+
+cd ~/catkin_ws
+source devel/setup.bash
+roslaunch simulation_gazebo main.launch world_file:=:='$(find amr_crick_description)/worlds/empty.world'
+
+
+
+roslaunch amr_crick_description spawn_main_amr_crick.launch
+
+
+
+
+

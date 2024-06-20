@@ -1,0 +1,7 @@
+set(amr_randezvous_SETUP_PY_SETUP_MODULE "distutils.core")
+set(amr_randezvous_SETUP_PY_VERSION "0.0.0")
+set(amr_randezvous_SETUP_PY_SCRIPTS "")
+set(amr_randezvous_SETUP_PY_PACKAGES "amr_randezvous")
+set(amr_randezvous_SETUP_PY_PACKAGE_DIRS "src/amr_randezvous")
+set(amr_randezvous_SETUP_PY_MODULES "")
+set(amr_randezvous_SETUP_PY_MODULE_DIRS "")

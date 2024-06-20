@@ -1,0 +1,8 @@
+prefix=/home/user/catkin_ws/install
+
+Name: amr_detection
+Description: Description of amr_detection
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib 
+Requires: rospy
